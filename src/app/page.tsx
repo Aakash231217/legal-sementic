@@ -83,9 +83,7 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<SearchResult | null>(
-    null
-  );
+  const [selectedDocument, setSelectedDocument] = useState<SearchResult | null>(null);
 
   useEffect(() => {
     checkAndBootstrapIndex(setIsBootstrapping, setIsIndexReady);
@@ -98,7 +96,7 @@ export default function Home() {
 
   if (selectedDocument) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
         <DocumentView
           document={selectedDocument}
           quote={selectedDocument.metadata.pageContent}
@@ -109,24 +107,24 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col items-center w-full mb-8">
           {isBootstrapping && (
-            <div className="flex items-center space-x-3 bg-white p-4 rounded-lg shadow-sm">
-              <p className="text-gray-600">Processing legal documents...</p>
-              <div className="spinner border-4 border-t-transparent border-indigo-600 rounded-full w-5 h-5 animate-spin"></div>
+            <div className="flex items-center space-x-3 bg-white p-6 rounded-2xl shadow-2xl transform transition-transform duration-300 ease-out">
+              <p className="text-gray-600 font-semibold">Processing legal documents...</p>
+              <div className="spinner border-4 border-t-transparent border-indigo-600 rounded-full w-6 h-6 animate-spin"></div>
             </div>
           )}
         </div>
 
         {isIndexReady && !isBootstrapping && (
           <div className="w-full">
-            <h1 className="text-4xl font-bold text-center text-gray-900 mb-3">
-              Legal Document Search
+            <h1 className="text-5xl font-extrabold text-center text-gray-900 mb-3">
+              Legal Search AI-Advisor
             </h1>
             <p className="text-center text-gray-600 text-lg mb-8">
-              Use natural language to explore legal documents and precedents
+              Explore legal documents and precedents with NLP
             </p>
 
             <div className="max-w-3xl mx-auto mb-12">
@@ -141,15 +139,15 @@ export default function Home() {
 
             {isSearching && (
               <div className="flex justify-center mb-8">
-                <div className="flex items-center space-x-3 bg-white p-3 rounded-lg shadow-sm">
-                  <p className="text-gray-600">Searching documents...</p>
-                  <div className="spinner border-3 border-t-transparent border-indigo-600 rounded-full w-4 h-4 animate-spin"></div>
+                <div className="flex items-center space-x-3 bg-white p-4 rounded-2xl shadow-xl">
+                  <p className="text-gray-600 font-semibold">Searching documents...</p>
+                  <div className="spinner border-3 border-t-transparent border-indigo-600 rounded-full w-5 h-5 animate-spin"></div>
                 </div>
               </div>
             )}
 
             {results.length > 0 && query && (
-              <div className="flex justify-between items-center mb-8 bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex justify-between items-center mb-8 bg-white p-4 rounded-lg shadow-xl">
                 <p className="text-gray-700">
                   Found {results.length} result{results.length > 1 ? "s" : ""}{" "}
                   for{" "}
@@ -178,46 +176,34 @@ export default function Home() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {results.map((result, index) => (
                 <Card
                   key={index}
-                  className="bg-white hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                  className="bg-white bg-opacity-40 backdrop-blur-lg hover:scale-105 transition-transform duration-300 ease-out shadow-2xl rounded-2xl cursor-pointer"
                   onClick={() => setSelectedDocument(result)}
                 >
                   <CardContent className="p-6">
-                    <h2 className="text-xl font-semibold mb-3 text-gray-900">
+                    <h2 className="text-2xl font-semibold mb-3 text-white">
                       {result.metadata.title}
                     </h2>
-                    <blockquote className="relative p-4 mb-4 bg-gray-50 rounded-lg">
-                      <p className="text-gray-700 line-clamp-4 italic">
+                    <blockquote className="relative p-4 mb-4 bg-white bg-opacity-20 backdrop-blur-md rounded-lg text-white">
+                      <p className="text-gray-200 line-clamp-4 italic">
                         {sanitizeString(result.metadata.pageContent)}
                       </p>
                     </blockquote>
-                    <div className="space-y-2 text-sm text-gray-600">
+                    <div className="space-y-2 text-sm text-gray-300">
                       <div className="flex items-center">
-                        <span className="font-medium text-gray-900 w-20">
-                          Topic:
-                        </span>
-                        <span className="truncate">
-                          {result.metadata.topic}
-                        </span>
+                        <span className="font-medium text-white w-20">Topic:</span>
+                        <span className="truncate">{result.metadata.topic}</span>
                       </div>
                       <div className="flex items-center">
-                        <span className="font-medium text-gray-900 w-20">
-                          Verdict:
-                        </span>
-                        <span className="truncate">
-                          {result.metadata.outcome}
-                        </span>
+                        <span className="font-medium text-white w-20">Verdict:</span>
+                        <span className="truncate">{result.metadata.outcome}</span>
                       </div>
                       <div className="flex items-center">
-                        <span className="font-medium text-gray-900 w-20">
-                          Date:
-                        </span>
-                        <span>
-                          {new Date(result.metadata.date).toLocaleDateString()}
-                        </span>
+                        <span className="font-medium text-white w-20">Date:</span>
+                        <span>{new Date(result.metadata.date).toLocaleDateString()}</span>
                       </div>
                     </div>
                   </CardContent>
